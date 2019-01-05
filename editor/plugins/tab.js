@@ -8,7 +8,9 @@ module.exports = function (editor) {
             e.stopPropagation();
             // editor.setContent(editor.el.value + "\t");
             let { startIndex, endIndex } = editor.getSelection();
-            console.log(startIndex, endIndex)
+            let content = editor.getContent();
+            editor.setContent(`${content.substring(0, startIndex)}\t${content.substring(endIndex, content.length)}`);
+            editor.setSelection(startIndex + 1, startIndex + 1);
         }
     })
 }

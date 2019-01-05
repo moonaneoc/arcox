@@ -1,5 +1,5 @@
 const { isObject, debounce } = require("../utils");
-const { setContent, getContent, setSelection, getSelection, format, use, emit, emitSync, on } = require("./editor-api.js");
+const { focus, setContent, getContent, setSelection, getSelection, format, use, emit, emitSync, on } = require("./editor-api.js");
 
 function EsEditor(el) {
     if (!(this instanceof EsEditor)) {
@@ -38,6 +38,7 @@ function EsEditor(el) {
 }
 
 EsEditor.prototype.defaultConfig = require("./config.json");
+EsEditor.prototype.focus = focus;
 EsEditor.prototype.setContent = setContent;
 EsEditor.prototype.getContent = getContent;
 EsEditor.prototype.setSelection = setSelection;
@@ -53,7 +54,7 @@ EsEditor.prototype.on = on;
  */
 function onInput() {
     if (this.el.value !== this._oldValue) {
-        this.emit("change", this.el.value, this._oldValue);
+        this.emit("change", this.el.value);
         this._oldValue = this.el.value;
     }
 }

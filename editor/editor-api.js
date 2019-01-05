@@ -1,17 +1,24 @@
 const { isString } = require("../utils")
 
 /**
+ * focus the editor
+ */
+function focus() {
+    this.el.focus();
+}
+
+/**
  * set the editor's content.
  */
 function setContent(val) {
     if (!isString(val)) throw new Error("Type error. String is required.");
 
-    if (val !== this._oldValue) {
-        this.emit("change", val, this._oldValue);
+    if (val !== this.el.value) {
         this.el.value = val;
-        this._oldValue = val;
+        this.emit("change", val);
     }
 }
+
 /**
  * get the editor's content.
  */
@@ -109,6 +116,7 @@ let { emit, emitSync, on } = (() => {
 })();
 
 module.exports = {
+    focus,
     setContent,
     getContent,
     setSelection,

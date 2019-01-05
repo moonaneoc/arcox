@@ -1,5 +1,7 @@
-let editor = require("./editor");
+let Editor = require("./editor");
+let Renderer = require("./renderer");
 
 module.exports = {
-    editor
+    Editor,
+    Renderer
 }

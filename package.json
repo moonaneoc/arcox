@@ -1,6 +1,6 @@
 {
-  "name": "es-editor",
-  "version": "1.0.0",
+  "name": "arcox",
+  "version": "0.0.1",
   "description": "A markdown editor",
   "main": "index.js",
   "scripts": {
@@ -8,17 +8,17 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/moonaneoc/es-editor.git"
+    "url": "git+https://github.com/moonaneoc/arcox.git"
   },
   "keywords": [
-    "es-editor",
+    "arcox",
     "markdown",
     "editor"
   ],
   "author": "zsj",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/moonaneoc/es-editor/issues"
+    "url": "https://github.com/moonaneoc/arcox/issues"
   },
-  "homepage": "https://github.com/moonaneoc/es-editor#readme"
+  "homepage": "https://github.com/moonaneoc/arcox#readme"
 }

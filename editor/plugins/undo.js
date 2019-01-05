@@ -1,31 +1,44 @@
 const MAX = 100;
 
 let index = 0;
-let history = [""];
+let history = [{
+    value: "",
+    startIndex: 0,
+    endIndex: 0
+}];
 let flag = true;
 
 function undo() {
     if (index > 0) {
         flag = false;
-        this.setContent(history[--index]);
+        index -= 1;
+        this.setContent(history[index].value);
+        this.setSelection(history[index].startIndex, history[index].endIndex);
     }
-    this.el.focus();
+    this.focus();
 }
 function redo() {
     if (index < history.length - 1) {
         flag = false;
-        this.setContent(history[++index]);
+        index += 1;
+        this.setContent(history[index].value);
+        this.setSelection(history[index].startIndex, history[index].endIndex);
     }
-    this.el.focus();
+    this.focus();
 }
 module.exports = function (editor) {
     editor.undo = undo.bind(editor);
     editor.redo = redo.bind(editor);
 
-    editor.on("change", function (val, oldValue) {
+    editor.on("change", function (value) {
         if (flag) {
+            let { startIndex, endIndex } = editor.getSelection();
             history = MAX > index + 1 ? history.slice(0, index + 1) : history.slice(1, index + 1);
-            history.push(val);
+            history.push({
+                value,
+                startIndex,
+                endIndex
+            });
             index = history.length - 1;
         } else {
             flag = true;
@@ -48,5 +61,4 @@ module.exports = function (editor) {
             editor.redo();
         }
     })
-
 }
