@@ -1,0 +1,77 @@
+{
+    "el": "",
+    "plugins": {
+        "undo": true,
+        "tab": true
+    },
+    "formats": {
+        "heading1": {
+            "name": "heading1",
+            "prefix": "# "
+        },
+        "heading2": {
+            "name": "heading1",
+            "prefix": "## "
+        },
+        "heading3": {
+            "name": "heading1",
+            "prefix": "### "
+        },
+        "heading4": {
+            "name": "heading1",
+            "prefix": "#### "
+        },
+        "heading5": {
+            "name": "heading1",
+            "prefix": "##### "
+        },
+        "heading6": {
+            "name": "heading1",
+            "prefix": "###### "
+        },
+        "bold": {
+            "name": "name",
+            "prefix": "**",
+            "subfix": "**"
+        },
+        "italic": {
+            "name": "italic",
+            "prefix": "*",
+            "subfix": "*"
+        },
+        "blockquote": {
+            "name": "blockquote",
+            "prefix": "> "
+        },
+        "strike": {
+            "name": "strike",
+            "prefix": "~~",
+            "subfix": "~~"
+        },
+        "link": {
+            "name": "link",
+            "prefix": "[",
+            "subfix": "](url)"
+        },
+        "image": {
+            "name": "image",
+            "prefix": "![",
+            "subfix": "](url)"
+        },
+        "table": {
+            "name": "col",
+            "prefix": "|",
+            "subfix": "|col|col|\n|-|-|-|\n|col|col|col|"
+        },
+        "codeblock": {
+            "name": "js",
+            "prefix": "```",
+            "subfix": "\n```"
+        },
+        "inlinecode": {
+            "name": "code",
+            "prefix": "`",
+            "subfix": "`"
+        }
+    }
+}
