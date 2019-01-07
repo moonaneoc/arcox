@@ -1,4 +1,4 @@
-const { isString } = require("../utils")
+const { isString } = require("../utils");
 
 /**
  * focus the editor
@@ -115,6 +115,27 @@ let { emit, emitSync, on } = (() => {
     return { emit, emitSync, on };
 })();
 
+let { bind, unbind } = (() => {
+    let Renderer = null;
+    function bind(renderer, flag) {
+        if (!Renderer) Renderer = require("../renderer");
+
+        if (!(renderer instanceof Renderer)) throw new Error("Invalid param.Required an instance of Renderer.");
+        if (this.renderer) this.unbind();
+
+        this.renderer = renderer;
+        if (!flag) this.renderer.bind(this, true);
+    }
+
+    function unbind(flag) {
+        if (!this.renderer) return;
+
+        if (!flag) this.renderer.unbind(true);
+        this.renderer = null;
+    }
+    return { bind, unbind }
+})();
+
 module.exports = {
     focus,
     setContent,
@@ -125,5 +146,7 @@ module.exports = {
     use,
     emit,
     emitSync,
-    on
+    on,
+    bind,
+    unbind
 }

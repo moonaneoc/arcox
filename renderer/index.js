@@ -1,10 +1,10 @@
 const MarkdownIt = require("markdown-it");
 const { isObject } = require("../utils");
-const { render, getHtml } = require("./renderer-api.js");
+const { render, getHtml, bind, unbind } = require("./renderer-api.js");
 
-function EsRenderer(el) {
-    if (!(this instanceof EsRenderer)) {
-        return new EsRenderer(el);
+function Renderer(el) {
+    if (!(this instanceof Renderer)) {
+        return new Renderer(el);
     }
 
     this.config = extend.call(this, isObject(el) ? el : {});
@@ -23,14 +23,29 @@ function EsRenderer(el) {
     this.el = document.getElementById(elementId.replace(/^#/, ""));
 
     /**
+     * An Editor instance this bound.
+     * Using this.bind() or this.unbind() instead of setting the value directly
+     */
+    this.editor = null;
+
+    /**
+     * native event
+     */
+    this.el.addEventListener("scroll", (e) => {
+        // if (this.editor) this.editor.el.scrollTop = this.editor.el.scrollHeight * (this.el.scrollTop / this.el.scrollHeight);
+    });
+
+    /**
      *  store the render result
      */
     this.html = "";
 }
 
-EsRenderer.prototype.defaultConfig = require("./config.json");
-EsRenderer.prototype.render = render;
-EsRenderer.prototype.getHtml = getHtml;
+Renderer.prototype.defaultConfig = require("./config.json");
+Renderer.prototype.render = render;
+Renderer.prototype.getHtml = getHtml;
+Renderer.prototype.bind = bind;
+Renderer.prototype.unbind = unbind;
 
 /**
  * merge config
@@ -43,5 +58,4 @@ function extend(userConfig) {
     return userConfig;
 }
 
-// module.exports = EsRenderer;
-export default EsRenderer;
+module.exports = Renderer;

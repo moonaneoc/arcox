@@ -1,9 +1,9 @@
 const { isObject, debounce } = require("../utils");
-const { focus, setContent, getContent, setSelection, getSelection, format, use, emit, emitSync, on } = require("./editor-api.js");
+const { focus, setContent, getContent, setSelection, getSelection, format, use, emit, emitSync, on, bind, unbind } = require("./editor-api.js");
 
-function EsEditor(el) {
-    if (!(this instanceof EsEditor)) {
-        return new EsEditor(el);
+function Editor(el) {
+    if (!(this instanceof Editor)) {
+        return new Editor(el);
     }
 
     this.config = extend.call(this, isObject(el) ? el : {});
@@ -12,9 +12,15 @@ function EsEditor(el) {
     if (!elementId || !elementId.replace) throw new Error("Invalid element id");
 
     /**
-     * The textarea element which the editor mounted.
+     * the textarea element which the editor mounted.
      */
     this.el = document.getElementById(elementId.replace(/^#/, ""));
+
+    /**
+     * a Renderer instance the editor bound.
+     * using this.bind() or this.unbind() instead of setting the value directly
+     */
+    this.renderer = null;
 
     /**
      * store the value before change
@@ -24,7 +30,24 @@ function EsEditor(el) {
     /**
      * native event
      */
-    this.el.addEventListener("input", (e) => { debounce(onInput, this); });
+    this.el.addEventListener("input", (e) => {
+        if (this.renderer) this.renderer.render(this.el.value);
+        debounce(onInput, this);
+    });
+
+    /**
+     * native event
+     */
+    this.el.addEventListener("scroll", (e) => {
+        if (this.renderer) this.renderer.el.scrollTop = this.renderer.el.scrollHeight * (this.el.scrollTop / this.el.scrollHeight);
+    });
+
+    /**
+     * handle change event
+     */
+    this.on("change", (value) => {
+        if (this.renderer) this.renderer.render(value);
+    })
 
     /**
      * use prefab plugins if not disable
@@ -37,17 +60,19 @@ function EsEditor(el) {
     listenKeyboardEvent.call(this);
 }
 
-EsEditor.prototype.defaultConfig = require("./config.json");
-EsEditor.prototype.focus = focus;
-EsEditor.prototype.setContent = setContent;
-EsEditor.prototype.getContent = getContent;
-EsEditor.prototype.setSelection = setSelection;
-EsEditor.prototype.getSelection = getSelection;
-EsEditor.prototype.format = format;
-EsEditor.prototype.use = use;
-EsEditor.prototype.emit = emit;
-EsEditor.prototype.emitSync = emitSync;
-EsEditor.prototype.on = on;
+Editor.prototype.defaultConfig = require("./config.json");
+Editor.prototype.focus = focus;
+Editor.prototype.setContent = setContent;
+Editor.prototype.getContent = getContent;
+Editor.prototype.setSelection = setSelection;
+Editor.prototype.getSelection = getSelection;
+Editor.prototype.format = format;
+Editor.prototype.use = use;
+Editor.prototype.emit = emit;
+Editor.prototype.emitSync = emitSync;
+Editor.prototype.on = on;
+Editor.prototype.bind = bind;
+Editor.prototype.unbind = unbind;
 
 /**
  * handle native input event
@@ -101,5 +126,4 @@ function listenKeyboardEvent() {
     }
 }
 
-// module.exports = EsEditor;
-export default EsEditor;
+module.exports = Editor;
