@@ -27,6 +27,8 @@ function Editor(el) {
      */
     this._oldValue = "";
 
+    this._preventSyncScroll = false;
+
     /**
      * native event
      */
@@ -38,16 +40,17 @@ function Editor(el) {
     /**
      * native event
      */
-    this.el.addEventListener("scroll", (e) => {
-        if (this.renderer) this.renderer.el.scrollTop = this.renderer.el.scrollHeight * (this.el.scrollTop / this.el.scrollHeight);
-    });
+    this.el.addEventListener("scroll", syncScroll.bind(this));
 
     /**
-     * handle change event
+     * handle event
      */
-    this.on("change", (value) => {
-        if (this.renderer) this.renderer.render(value);
-    })
+    this.on("change", (value) => { if (this.renderer) this.renderer.render(value); })
+        .on("__sync_scroll", syncScroll.bind(this));
+
+    /**
+     * handle scroll
+     */
 
     /**
      * use prefab plugins if not disable
@@ -81,6 +84,20 @@ function onInput() {
     if (this.el.value !== this._oldValue) {
         this.emit("change", this.el.value);
         this._oldValue = this.el.value;
+    }
+}
+
+function syncScroll(pos) {
+    if (typeof pos === "number") {
+        this._preventSyncScroll = true;
+        this.el.scrollTop = this.el.scrollHeight * (this.renderer.el.scrollTop / this.renderer.el.scrollHeight);
+    } else if (this._preventSyncScroll) {
+        this._preventSyncScroll = false;
+    } else if (this.renderer) {
+        // console.log("emit", this.el.scrollHeight, this.el.clientHeight, this.el.scrollTop)
+        if (this.el.scrollHeight - this.el.clientHeight - this.el.scrollTop < 30) this.el.scrollTop = this.el.scrollHeight;
+        this.renderer.emitSync("__sync__scroll", this.el.scrollTop);
+        // this.renderer.emit("__sync__scroll", this.el.scrollTop);
     }
 }
 

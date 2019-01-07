@@ -8,7 +8,7 @@ function isObject(obj) {
 
 function debounce(method, context) {
     if (method.__debounce__timer) clearTimeout(method.__debounce__timer)
-    method.__debounce__timer = setTimeout(method.bind(context), 300);
+    method.__debounce__timer = setTimeout(method.bind(context), 100);
 }
 
 module.exports = {

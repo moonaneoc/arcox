@@ -7,6 +7,42 @@ function getHtml() {
     return this.html;
 }
 
+/**
+ * event module
+ */
+let { emit, emitSync, on } = (() => {
+    let listener = {};
+    function emit(event) {
+        let args = Array.prototype.slice.call(arguments, 1);
+        setTimeout(() => {
+            if (listener[event]) {
+                listener[event].forEach(cb => {
+                    if (cb) cb.apply(this, args);
+                })
+            }
+        }, 0);
+        return this;
+    }
+    function emitSync(event) {
+        let args = Array.prototype.slice.call(arguments, 1);
+        if (listener[event]) {
+            listener[event].forEach(cb => {
+                if (cb) cb.apply(this, args);
+            })
+        }
+        return this;
+    }
+    function on(event, callback) {
+        if (!listener[event]) listener[event] = [];
+        listener[event].push(callback);
+        return this;
+    }
+    return { emit, emitSync, on };
+})();
+
+/**
+ * bind/unbind with a editor
+ */
 let { bind, unbind } = (() => {
     let Editor = null;
     function bind(editor, flag) {
@@ -32,5 +68,8 @@ module.exports = {
     render,
     getHtml,
     bind,
-    unbind
+    unbind,
+    emit,
+    emitSync,
+    on
 }

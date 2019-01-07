@@ -99,6 +99,7 @@ let { emit, emitSync, on } = (() => {
                 })
             }
         }, 0);
+        return this;
     }
     function emitSync(event) {
         let args = Array.prototype.slice.call(arguments, 1);
@@ -107,10 +108,12 @@ let { emit, emitSync, on } = (() => {
                 if (cb) cb.apply(this, args);
             })
         }
+        return this;
     }
     function on(event, callback) {
         if (!listener[event]) listener[event] = [];
         listener[event].push(callback);
+        return this;
     }
     return { emit, emitSync, on };
 })();
