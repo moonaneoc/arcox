@@ -1,4 +1,4 @@
-const { isObject, debounce } = require("../utils");
+const { isObject, isString, debounce } = require("../utils");
 const { focus, setContent, getContent, setSelection, getSelection, format, use, emit, emitSync, on, bind, unbind } = require("./editor-api.js");
 
 function Editor(el) {
@@ -9,7 +9,7 @@ function Editor(el) {
     this.config = extend.call(this, isObject(el) ? el : {});
 
     let elementId = this.config.el || el;
-    if (!elementId || !elementId.replace) throw new Error("Invalid element id");
+    if (!elementId || !isString(elementId)) throw new Error("Invalid element id");
 
     /**
      * the textarea element which the editor mounted.
@@ -27,30 +27,18 @@ function Editor(el) {
      */
     this._oldValue = "";
 
-    this._preventSyncScroll = false;
-
     /**
      * native event
      */
     this.el.addEventListener("input", (e) => {
-        if (this.renderer) this.renderer.render(this.el.value);
+        contentChange.call(this);
         debounce(onInput, this);
     });
 
     /**
-     * native event
-     */
-    this.el.addEventListener("scroll", syncScroll.bind(this));
-
-    /**
      * handle event
      */
-    this.on("change", (value) => { if (this.renderer) this.renderer.render(value); })
-        .on("__sync_scroll", syncScroll.bind(this));
-
-    /**
-     * handle scroll
-     */
+    this.on("change", (value) => { contentChange.call(this) });
 
     /**
      * use prefab plugins if not disable
@@ -61,6 +49,14 @@ function Editor(el) {
      * listen native keyboard event
      */
     listenKeyboardEvent.call(this);
+
+    /**
+     * bind context
+     */
+    onMouseEnter = onMouseEnter.bind(this);
+    syncRenderer = syncRenderer.bind(this);
+
+    this.el.addEventListener("mouseenter", onMouseEnter);
 }
 
 Editor.prototype.defaultConfig = require("./config.json");
@@ -77,6 +73,33 @@ Editor.prototype.on = on;
 Editor.prototype.bind = bind;
 Editor.prototype.unbind = unbind;
 
+Editor.prototype._removeScrollListener = function () {
+    this.el.removeEventListener("scroll", syncRenderer)
+}
+
+function onMouseEnter() {
+    if (this.renderer) {
+        this.el.addEventListener("scroll", syncRenderer);
+        this.renderer._removeScrollListener();
+    }
+}
+function syncRenderer() {
+    if (this.renderer) {
+        let ratio = this.el.scrollTop / (this.el.scrollHeight - this.el.clientHeight);
+        this.renderer.el.scrollTop = (this.renderer.el.scrollHeight - this.renderer.el.clientHeight) * ratio;
+    }
+}
+
+function contentChange() {
+    if ((this.el.scrollHeight - this.el.clientHeight) - this.el.scrollTop < 20) {
+        this.el.scrollTop = this.el.scrollHeight - this.el.clientHeight;
+    }
+    if (this.renderer) {
+        this.renderer.render(this.el.value);
+        syncRenderer();
+    }
+}
+
 /**
  * handle native input event
  */
@@ -84,20 +107,6 @@ function onInput() {
     if (this.el.value !== this._oldValue) {
         this.emit("change", this.el.value);
         this._oldValue = this.el.value;
-    }
-}
-
-function syncScroll(pos) {
-    if (typeof pos === "number") {
-        this._preventSyncScroll = true;
-        this.el.scrollTop = this.el.scrollHeight * (this.renderer.el.scrollTop / this.renderer.el.scrollHeight);
-    } else if (this._preventSyncScroll) {
-        this._preventSyncScroll = false;
-    } else if (this.renderer) {
-        // console.log("emit", this.el.scrollHeight, this.el.clientHeight, this.el.scrollTop)
-        if (this.el.scrollHeight - this.el.clientHeight - this.el.scrollTop < 30) this.el.scrollTop = this.el.scrollHeight;
-        this.renderer.emitSync("__sync__scroll", this.el.scrollTop);
-        // this.renderer.emit("__sync__scroll", this.el.scrollTop);
     }
 }
 
@@ -129,8 +138,11 @@ function listenKeyboardEvent() {
     this.el.onkeydown = (e) => {
         e = window.event || e;
         this.emitSync("keydown", {
-            ctrl: e.ctrlKey || e.metaKey,
             code: e.keyCode || e.which || e.charCode,
+            ctrl: e.ctrlKey,
+            meta: e.metaKey,
+            alt: e.altKey,
+            shift: e.shiftKey,
             preventDefault: function () {
                 if (e.preventDefault) e.preventDefault();
                 else e.returnValue = false;

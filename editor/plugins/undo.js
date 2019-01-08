@@ -45,14 +45,14 @@ module.exports = function (editor) {
         }
     })
     editor.on("keydown", function (e) {
-        if (e.ctrl && e.code === 90) {
+        if (e.code === 90 && (e.ctrl || e.meta) && !e.alt && !e.shift) {
             /**
              * ctrl+z
              */
             e.preventDefault();
             e.stopPropagation();
             editor.undo();
-        } else if (e.ctrl && e.code === 89) {
+        } else if (e.code === 89 && (e.ctrl || e.meta) && !e.alt && !e.shift) {
             /**
              * ctrl+y
              */

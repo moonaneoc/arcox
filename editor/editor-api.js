@@ -1,4 +1,4 @@
-const { isString } = require("../utils");
+const { isNonnegativeInt, isString, isObject, isFunction } = require("../utils");
 
 /**
  * focus the editor
@@ -118,6 +118,9 @@ let { emit, emitSync, on } = (() => {
     return { emit, emitSync, on };
 })();
 
+/**
+ * bind renderer
+ */
 let { bind, unbind } = (() => {
     let Renderer = null;
     function bind(renderer, flag) {

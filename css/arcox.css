@@ -650,6 +650,7 @@
     word-wrap: normal;
     background-color: transparent;
     border: 0;
+    tab-size: 4;
   }
   
   .arcox-renderer .full-commit .btn-outline:not(:disabled):hover {

@@ -1,9 +1,15 @@
+function isNonnegativeInt(num) {
+    return parseInt(num) === num && num >= 0;
+}
 function isString(str) {
     return typeof str === "string";
 }
 
 function isObject(obj) {
     return Object.prototype.toString.call(obj) === '[object Object]';
+}
+function isFunction(fun) {
+    return typeof fun === "function";
 }
 
 function debounce(method, context) {
@@ -12,7 +18,9 @@ function debounce(method, context) {
 }
 
 module.exports = {
+    isNonnegativeInt,
     isString,
     isObject,
+    isFunction,
     debounce
 }

@@ -3,7 +3,7 @@
  */
 module.exports = function (editor) {
     editor.on("keydown", function (e) {
-        if (e.code === 9) {
+        if (e.code === 9 && !e.ctrl && !e.meta && !e.alt && !e.shift) {
             e.preventDefault();
             e.stopPropagation();
             let { startIndex, endIndex } = editor.getSelection();

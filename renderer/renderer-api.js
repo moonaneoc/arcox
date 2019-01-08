@@ -52,6 +52,14 @@ let { bind, unbind } = (() => {
         if (this.editor) this.unbind();
 
         this.editor = editor;
+        this.render(this.editor.el.value);
+
+        /**
+         * sync scrollTop
+         */
+        let ratio = this.editor.el.scrollTop / (this.editor.el.scrollHeight - this.editor.el.clientHeight);
+        this.el.scrollTop = (this.el.scrollHeight - this.el.clientHeight) * ratio;
+
         if (!flag) this.editor.bind(this, true);
     }
 
@@ -60,6 +68,8 @@ let { bind, unbind } = (() => {
 
         if (!flag) this.editor.unbind(true);
         this.editor = null;
+        this.html = "";
+        this.el.innerHTML = "";
     }
     return { bind, unbind };
 })();
