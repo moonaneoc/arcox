@@ -49,7 +49,7 @@ function getSelection() {
  */
 function format(key) {
     let { prefix, subfix, name } = this.config.formats[key] ? this.config.formats[key] : {};
-    if (typeof prefix !== "string" && typeof subfix !== "string") throw new Error(`Invalid format ${key}`);
+    if (typeof prefix !== "string" && typeof subfix !== "string") throw new Error(`Invalid format '${key}'`);
 
     name = name || "";
     prefix = prefix || "";
@@ -74,6 +74,11 @@ function format(key) {
             this.setSelection(startIndex + prefix.length, startIndex + prefix.length + name.length);
         }
     }
+}
+format.add = function (key, name, prefix, subfix) {
+    if (typeof key === "undefined") throw new Error("Param 'key' is required.");
+    if (typeof prefix !== "string" && typeof subfix !== "string") throw new Error(`Absence of 'prefix' and 'subfix'.`);
+    // this.
 }
 
 /**

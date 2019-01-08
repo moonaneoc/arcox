@@ -10,23 +10,23 @@
             "prefix": "# "
         },
         "heading2": {
-            "name": "heading1",
+            "name": "heading2",
             "prefix": "## "
         },
         "heading3": {
-            "name": "heading1",
+            "name": "heading3",
             "prefix": "### "
         },
         "heading4": {
-            "name": "heading1",
+            "name": "heading4",
             "prefix": "#### "
         },
         "heading5": {
-            "name": "heading1",
+            "name": "heading5",
             "prefix": "##### "
         },
         "heading6": {
-            "name": "heading1",
+            "name": "heading6",
             "prefix": "###### "
         },
         "bold": {
