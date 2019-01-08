@@ -125,7 +125,14 @@ function usePrefabPlugins() {
 function extend(userConfig) {
     let options = Object.keys(this.defaultConfig);
     options.forEach(key => {
-        userConfig[key] = userConfig[key] || this.defaultConfig[key];
+        if (isObject(this.defaultConfig[key]) && typeof userConfig[key] !== "undefined") {
+            if (!isObject(userConfig[key])) throw new Error(`Invalid config.'${key}' must be an object.`);
+            Object.keys(this.defaultConfig[key]).forEach(k => {
+                if (typeof userConfig[key][k] === "undefined") userConfig[key][k] = this.defaultConfig[key][k];
+            });
+        } else {
+            userConfig[key] = userConfig[key] || this.defaultConfig[key];
+        }
     })
     return userConfig;
 }
