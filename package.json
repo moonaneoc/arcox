@@ -20,5 +20,8 @@
   "bugs": {
     "url": "https://github.com/moonaneoc/arcox/issues"
   },
-  "homepage": "https://github.com/moonaneoc/arcox#readme"
+  "homepage": "https://github.com/moonaneoc/arcox#readme",
+  "dependencies": {
+    "markdown-it": "^8.4.2"
+  }
 }

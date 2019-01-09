@@ -1,7 +1,7 @@
-import Editor from "./editor";
-import Renderer from "./renderer";
+let Editor = require("./editor");
+let Renderer = require("./renderer");
 
-export {
+module.exports = {
     Editor,
     Renderer
 }

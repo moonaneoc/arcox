@@ -65,18 +65,15 @@ function format(key) {
     } else {
         // exists selection area
         if (this.el.value.substring(startIndex - prefix.length, startIndex) === prefix && this.el.value.substring(endIndex, endIndex + subfix.length) === subfix) {
-            // undo
+            // remove prefix and subfix
             this.setContent(`${this.el.value.substring(0, startIndex - prefix.length)}${this.el.value.substring(startIndex, endIndex)}${this.el.value.substring(endIndex + subfix.length)}`);
-            this.setSelection(startIndex - prefix.length, startIndex - prefix.length + name.length);
+            this.setSelection(startIndex - prefix.length, endIndex - prefix.length);
         } else {
-            // attach
+            // add prefix and subfix
             this.setContent(`${this.el.value.substring(0, startIndex)}${prefix}${this.el.value.substring(startIndex, endIndex)}${subfix}${this.el.value.substring(endIndex)}`);
-            this.setSelection(startIndex + prefix.length, startIndex + prefix.length + name.length);
+            this.setSelection(startIndex + prefix.length, endIndex + prefix.length);
         }
     }
-    format.add = (function (key, name, prefix, subfix) {
-
-    }).bind(this);
 }
 
 /**
