@@ -53,7 +53,7 @@ let { bind, unbind } = (() => {
 
         this.editor = editor;
         this.render(this.editor.el.value);
-
+        
         /**
          * sync scrollTop
          */

@@ -1,4 +1,5 @@
 const MarkdownIt = require("markdown-it");
+const hljs = require('highlight.js');
 const { isObject, isString } = require("../utils");
 const { render, getHtml, bind, unbind, emit, emitSync, on } = require("./renderer-api.js");
 
@@ -12,7 +13,18 @@ function Renderer(el) {
     /**
      * the instance of MarkdownIt
      */
-    this.md = new MarkdownIt();
+    this.md = new MarkdownIt({
+        highlight: (str, lang) => {
+            if (!lang && this.config.lang) lang = this.config.lang;
+            if (lang && hljs.getLanguage(lang)) {
+                try {
+                    return '<pre class="hljs"><code>' + hljs.highlight(lang, str).value + '</code></pre>';
+                } catch (__) { }
+            }
+
+            return '<pre class="hljs"><code>' + this.md.utils.escapeHtml(str) + '</code></pre>';
+        }
+    });
 
     let elementId = this.config.el || el;
     if (!elementId || !isString(elementId)) throw new Error("Invalid element id");
@@ -73,9 +85,17 @@ function syncEditor() {
  * merge config
  */
 function extend(userConfig) {
+    let hasOwnProperty = Object.prototype.hasOwnProperty;
     let options = Object.keys(this.defaultConfig);
     options.forEach(key => {
-        userConfig[key] = userConfig[key] || this.defaultConfig[key];
+        if (isObject(this.defaultConfig[key]) && hasOwnProperty.call(userConfig, key)) {
+            if (!isObject(userConfig[key])) throw new Error(`Invalid config.'${key}' must be an object.`);
+            Object.keys(this.defaultConfig[key]).forEach(k => {
+                if (!hasOwnProperty.call(userConfig[key], k)) userConfig[key][k] = this.defaultConfig[key][k];
+            });
+        } else {
+            userConfig[key] = hasOwnProperty.call(userConfig, key) ? userConfig[key] : this.defaultConfig[key];
+        }
     })
     return userConfig;
 }
