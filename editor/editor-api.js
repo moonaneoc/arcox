@@ -127,16 +127,17 @@ let { bind, unbind } = (() => {
         if (!Renderer) Renderer = require("../renderer");
 
         if (!(renderer instanceof Renderer)) throw new Error("Invalid param.Required an instance of Renderer.");
+
         if (this.renderer) this.unbind();
 
         this.renderer = renderer;
-        if (!flag) this.renderer.bind(this, true);
+        if (flag !== true) this.renderer.bind(this, true);
     }
 
     function unbind(flag) {
         if (!this.renderer) return;
 
-        if (!flag) this.renderer.unbind(true);
+        if (flag !== true) this.renderer.unbind(true);
         this.renderer = null;
     }
     return { bind, unbind }

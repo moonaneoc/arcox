@@ -53,20 +53,20 @@ let { bind, unbind } = (() => {
 
         this.editor = editor;
         this.render(this.editor.el.value);
-        
+
         /**
          * sync scrollTop
          */
         let ratio = this.editor.el.scrollTop / (this.editor.el.scrollHeight - this.editor.el.clientHeight);
         this.el.scrollTop = (this.el.scrollHeight - this.el.clientHeight) * ratio;
 
-        if (!flag) this.editor.bind(this, true);
+        if (flag !== true) this.editor.bind(this, true);
     }
 
     function unbind(flag) {
         if (!this.editor) return;
 
-        if (!flag) this.editor.unbind(true);
+        if (flag !== true) this.editor.unbind(true);
         this.editor = null;
         this.html = "";
         this.el.innerHTML = "";
