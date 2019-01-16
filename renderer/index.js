@@ -35,6 +35,11 @@ function Renderer(el) {
     this.el = document.getElementById(elementId.replace(/^#/, ""));
 
     /**
+     * add class
+     */
+    this.el.className += this.el.className ? " arcox-renderer" : "arcox-renderer";
+
+    /**
      * an Editor instance this bound.
      * using this.bind() or this.unbind() instead of setting the value directly
      */
@@ -54,7 +59,7 @@ function Renderer(el) {
     this.el.addEventListener("mouseenter", onMouseEnter);
 }
 
-Renderer.prototype.defaultConfig = require("./config.json");
+Renderer.prototype._defaultConfig = require("./config.json");
 Renderer.prototype.render = render;
 Renderer.prototype.getHtml = getHtml;
 Renderer.prototype.bind = bind;
@@ -86,15 +91,15 @@ function syncEditor() {
  */
 function extend(userConfig) {
     let hasOwnProperty = Object.prototype.hasOwnProperty;
-    let options = Object.keys(this.defaultConfig);
+    let options = Object.keys(this._defaultConfig);
     options.forEach(key => {
-        if (isObject(this.defaultConfig[key]) && hasOwnProperty.call(userConfig, key)) {
+        if (isObject(this._defaultConfig[key]) && hasOwnProperty.call(userConfig, key)) {
             if (!isObject(userConfig[key])) throw new Error(`Invalid config.'${key}' must be an object.`);
-            Object.keys(this.defaultConfig[key]).forEach(k => {
-                if (!hasOwnProperty.call(userConfig[key], k)) userConfig[key][k] = this.defaultConfig[key][k];
+            Object.keys(this._defaultConfig[key]).forEach(k => {
+                if (!hasOwnProperty.call(userConfig[key], k)) userConfig[key][k] = this._defaultConfig[key][k];
             });
         } else {
-            userConfig[key] = hasOwnProperty.call(userConfig, key) ? userConfig[key] : this.defaultConfig[key];
+            userConfig[key] = hasOwnProperty.call(userConfig, key) ? userConfig[key] : this._defaultConfig[key];
         }
     })
     return userConfig;

@@ -30,7 +30,7 @@
             "prefix": "###### "
         },
         "bold": {
-            "name": "name",
+            "name": "bold",
             "prefix": "**",
             "subfix": "**"
         },

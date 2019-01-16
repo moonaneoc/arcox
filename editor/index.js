@@ -59,7 +59,7 @@ function Editor(el) {
     this.el.addEventListener("mouseenter", onMouseEnter);
 }
 
-Editor.prototype.defaultConfig = require("./config.json");
+Editor.prototype._defaultConfig = require("./config.json");
 Editor.prototype.focus = focus;
 Editor.prototype.setContent = setContent;
 Editor.prototype.getContent = getContent;
@@ -124,15 +124,15 @@ function usePrefabPlugins() {
  */
 function extend(userConfig) {
     let hasOwnProperty = Object.prototype.hasOwnProperty;
-    let options = Object.keys(this.defaultConfig);
+    let options = Object.keys(this._defaultConfig);
     options.forEach(key => {
-        if (isObject(this.defaultConfig[key]) && hasOwnProperty.call(userConfig, key)) {
+        if (isObject(this._defaultConfig[key]) && hasOwnProperty.call(userConfig, key)) {
             if (!isObject(userConfig[key])) throw new Error(`Invalid config.'${key}' must be an object.`);
-            Object.keys(this.defaultConfig[key]).forEach(k => {
-                if (!hasOwnProperty.call(userConfig[key], k)) userConfig[key][k] = this.defaultConfig[key][k];
+            Object.keys(this._defaultConfig[key]).forEach(k => {
+                if (!hasOwnProperty.call(userConfig[key], k)) userConfig[key][k] = this._defaultConfig[key][k];
             });
         } else {
-            userConfig[key] = hasOwnProperty.call(userConfig, key) ? userConfig[key] : this.defaultConfig[key];
+            userConfig[key] = hasOwnProperty.call(userConfig, key) ? userConfig[key] : this._defaultConfig[key];
         }
     })
     return userConfig;
