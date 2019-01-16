@@ -137,8 +137,6 @@ editor.bind(renderer);
 
 /**
  * unbind with renderer.
- *
- * renderer: Renderer
  */
 editor.unbind();
 ```

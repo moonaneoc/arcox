@@ -3,7 +3,7 @@
   "version": "0.0.2",
   "description": "A markdown editor",
   "__package__name": "arcox",
-  "main": "index.js",
+  "main": "dist/arcox.min.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
