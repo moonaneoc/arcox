@@ -1,9 +1,9 @@
 {
   "name": "arcox",
   "version": "0.0.2",
-  "description": "A markdown editor",
+  "description": "An extensible markdown editor",
   "__package__name": "arcox",
-  "main": "dist/arcox.min.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
